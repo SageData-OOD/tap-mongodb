@@ -19,6 +19,9 @@ COUNTS = {}
 TIMES = {}
 SCHEMA_COUNT = {}
 SCHEMA_TIMES = {}
+SDC_DELETED_AT = "_sdc_deleted_at"
+
+LOGGER = singer.get_logger()
 
 class InvalidProjectionException(Exception):
     """Raised if projection blacklists _id"""
@@ -174,9 +177,15 @@ def row_to_singer_record(stream, row, version, time_extracted):
     except MongoInvalidDateTimeException as ex:
         raise Exception("Error syncing collection {}, object ID {} - {}".format(stream["tap_stream_id"], row['_id'], ex)) from ex
 
+    record = {
+        "_id": row_to_persist["_id"],
+        "document": row_to_persist,
+        SDC_DELETED_AT: row_to_persist.get(SDC_DELETED_AT)
+    }
+
     return singer.RecordMessage(
         stream=calculate_destination_stream_name(stream),
-        record=row_to_persist,
+        record=record, 
         version=version,
         time_extracted=time_extracted)
 

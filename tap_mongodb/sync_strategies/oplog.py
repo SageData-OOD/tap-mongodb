@@ -9,7 +9,6 @@ import tap_mongodb.sync_strategies.common as common
 
 LOGGER = singer.get_logger()
 
-SDC_DELETED_AT = "_sdc_deleted_at"
 MAX_UPDATE_BUFFER_LENGTH = 500
 
 def get_latest_ts(client):
@@ -181,7 +180,7 @@ def sync_collection(client, stream, state, stream_projection, max_oplog_ts=None)
                     update_buffer.remove(row['o']['_id'])
 
                 # Delete ops only contain the _id of the row deleted
-                row['o'][SDC_DELETED_AT] = row['ts']
+                row['o'][common.SDC_DELETED_AT] = row['ts']
 
                 write_schema(schema, row['o'], stream)
                 record_message = common.row_to_singer_record(stream,
