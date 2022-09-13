@@ -160,7 +160,7 @@ def produce_collection_schema(collection):
                 },
                 "document": {
                     "type": [
-                        "string",
+                        "object",
                         "null"
                     ]
                 },
