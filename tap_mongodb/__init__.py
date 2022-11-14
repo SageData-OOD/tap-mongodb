@@ -373,17 +373,20 @@ def main_impl():
     config = args.config
 
     # Default SSL verify mode to true, give option to disable
-    verify_mode = config.get('verify_mode', 'true') == 'true'
-    use_ssl = config.get('ssl') == 'true'
+    verify_mode = config.get('verify_mode', False)
+    use_ssl = config.get('ssl')
+
+    
 
     connection_params = {"host": config['host'],
                          "port": int(config['port']),
                          "username": config.get('user', None),
                          "password": config.get('password', None),
                          "authSource": config['database'],
-                         "ssl": use_ssl,
+                         "tls": use_ssl,
                          "replicaset": config.get('replica_set', None),
-                         "readPreference": 'secondaryPreferred'}
+                         "readPreference": 'secondaryPreferred'
+                         }
 
     # NB: "ssl_cert_reqs" must ONLY be supplied if `SSL` is true.
     if not verify_mode and use_ssl:
