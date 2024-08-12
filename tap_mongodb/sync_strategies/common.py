@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import base64
 import datetime
+import json
 import time
 import uuid
 import decimal
@@ -179,7 +180,7 @@ def row_to_singer_record(stream, row, version, time_extracted):
 
     record = {
         "_id": row_to_persist["_id"],
-        "document": row_to_persist,
+        "document": json.dumps(row_to_persist),
         SDC_DELETED_AT: row_to_persist.get(SDC_DELETED_AT)
     }
 
